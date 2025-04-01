@@ -65,7 +65,6 @@ class SavePeftModelCallback(transformers.TrainerCallback):
 
         peft_model_path = os.path.join(checkpoint_folder, "adapter_model")
         kwargs["model"].save_pretrained(peft_model_path)
-        kwargs["tokenizer"].save_pretrained(peft_model_path)
 
     def on_save(self, args, state, control, **kwargs):
         self.save_model(args, state, kwargs)
@@ -305,8 +304,8 @@ def train():
     trainer.save_state()
     if not script_args.full_finetune and script_args.merge:
         model = model.merge_and_unload()
-        model.save_pretrained(script_args.output_dir)
-        tokenizer.save_pretrained(script_args.output_dir)
+        model.save_pretrained(script_args.output_dir+"/merged")
+        tokenizer.save_pretrained(script_args.output_dir+"/merged")
     if script_args.full_finetune:
         safe_save_model_for_hf_trainer(trainer=trainer, output_dir=script_args.output_dir)
         
